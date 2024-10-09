@@ -4,7 +4,7 @@ public class MicTest : MonoBehaviour
 {
     AudioSource audioSource;
     private float volumeLevel;
-    private float[] audioData = new float[256];
+    private float[] audioData = new float[512];
 
     private void Start()
     {
@@ -13,7 +13,7 @@ public class MicTest : MonoBehaviour
         if(Microphone.devices.Length > 0)
         {
             string micName = Microphone.devices[0];
-            audioSource.clip = Microphone.Start(micName, true, 10, 44100);
+            audioSource.clip = Microphone.Start(micName, true, 10, 16000);
 
             audioSource.loop = true;
             while(!(Microphone.GetPosition(micName) > 0)) { }
@@ -23,7 +23,7 @@ public class MicTest : MonoBehaviour
 
     private void Update()
     {
-        audioSource.GetOutputData(audioData, 0);
+        audioSource.clip.GetData(audioData, audioSource.timeSamples);
 
         float sum = 0;
         for(int i = 0; i < audioData.Length; i++)
@@ -32,6 +32,8 @@ public class MicTest : MonoBehaviour
         }
 
         volumeLevel = Mathf.Sqrt(sum / audioData.Length);
+        volumeLevel *= 100f;
+
         Debug.Log(volumeLevel);
     }
 }
