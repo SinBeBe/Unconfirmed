@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class MicTest : MonoBehaviour
@@ -19,19 +20,19 @@ public class MicTest : MonoBehaviour
 
     private void Update()
     {
-        
+        loudness = GetAveragedVolume() * sensitivity;
+        Debug.Log(loudness);
     }
 
-    private float GetAveragedVolume()
+    float GetAveragedVolume()
     {
         float[] data = new float[256];
         float a = 0;
         audioSource.GetOutputData(data, 0);
-        foreach(float s in data)
+        foreach (float s in data)
         {
             a += Mathf.Abs(s);
         }
-
         return a / 256;
     }
 }
